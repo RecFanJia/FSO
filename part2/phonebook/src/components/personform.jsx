@@ -1,24 +1,6 @@
 const PersonForm = (props) =>{
-  const addPerson = (event) => {
-    event.preventDefault()
-    console.log('button clicked', event.target)
-    if (props.persons.some(person => person.name === props.newName)) {
-      alert(`${newName} is already added to phonebook`);
-      return;
-    }
-    
-    const personObject = {
-      name: props.newName,
-      number: props.newNumber,
-      id: props.persons.length + 1 
-    }
-    
-    props.setPersons(props.persons.concat(personObject))
-    props.setNewName('')
-    props.setNewNumber('')
-  }
-    return(
-<form onSubmit= {addPerson}>
+return(
+<form onSubmit= {props.addPerson}>
         <div>
           name: <input 
           value = {props.newName}
