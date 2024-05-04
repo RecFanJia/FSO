@@ -14,7 +14,7 @@ const Persons = (props) =>{
         {props.persons.filter(person => 
         person.name.toLowerCase().includes(props.filterName.toLowerCase())).map(person => (
           <li key={person.id} style={itemStyle}>
-            {person.name} {person.number}{person.id}
+            {person.name} {person.number}
             <form style={{ marginLeft: '10px' }}>
               <button 
               type="button" 

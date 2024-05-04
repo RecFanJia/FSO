@@ -15,42 +15,71 @@ const App = () => {
     noteService
     .getAll()
     .then(response => {
+      console.log('response data',response.data)
         setPersons(response.data)
+        console.log(persons)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
+  console.log('render', persons.length, 'persons',)
 
   const addPerson = () => {
     console.log(persons)
       if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
-      return;
+        const personup = persons.find(
+          person => person.name === newName);
+        const personId = personup.id
+        console.log('personId is', personId)
+        const updatenumber = { ...personup, number: newNumber}
+        console.log('updatenumber is', updatenumber)
+        const confirmAdd = confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )// ask for confirmation for adding
+      if (!confirmAdd) {
+        console.log('Adding cancelled by user.');
+      ; 
+      }else{
+        noteService
+        .update(personId, updatenumber)
+        .then(response => {
+          console.log('Number updated successfully:', response.data)
+          setPersons(response.data)
+          
+          setNewName('')
+          setNewNumber('')
+        })
+        .catch(error => {
+          console.error('Failed to update contact:', error);
+        })
     }
+    
+    }else{
     const lastPersonId = persons.length > 0 ? parseInt(persons[persons.length-1].id) : 0;
     console.log(`lstpersonid is`, lastPersonId)
-    const newId = lastPersonId + 1;
+    const newId = lastPersonId + 1//base on the last person's id to create new person
 
     const personObject = {
       name: newName,
       number: newNumber,
       id: (newId).toString() 
     }
-
+    
     noteService
     .create(personObject)
     .then(response => {
       setPersons(persons.concat(response.data))
       setNewName('')
-      setNewNumber('')
-    })
+      setNewNumber('')//create new person on server
+    });
   }
+}
+
 
   const deletePerson = (id) => {
     const deleteName = persons.find(person => person.id === id).name
     const confirmDeletion = confirm(`Delete ${deleteName}?`);
   if (!confirmDeletion) {
     console.log('Deletion cancelled by user.');
-    return; 
+    return; // ask for confirmation for deleting
   }
 
     noteService.remove(id)
@@ -59,7 +88,7 @@ const App = () => {
     })
     .catch(error => {
         console.error('Error deleting the person:', error)
-    })
+    }) //delte person from phonebook
     const updatedPersons = persons.filter(person => person.id !== id)
     setPersons(updatedPersons)
 }
