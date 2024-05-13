@@ -12,4 +12,24 @@ const totalLikes = (array) => {
     : array.reduce(reducer,0)
  }
 
-module.exports = {dummy, totalLikes}
+ const favoBlog = (blogs) => {
+    if (blogs.length === 0) {
+      return null;  
+    }
+  
+    let indexMaxLikes = 0;  
+  
+    for (let i = 1; i < blogs.length; i++) {
+      if (blogs[i].likes > blogs[indexMaxLikes].likes) {
+        indexMaxLikes = i;  
+      }
+    }
+  
+    return {
+      title: blogs[indexMaxLikes].title,
+      author: blogs[indexMaxLikes].author,
+      likes: blogs[indexMaxLikes].likes
+    };
+  };  
+
+module.exports = {dummy, totalLikes, favoBlog}
