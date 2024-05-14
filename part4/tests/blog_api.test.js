@@ -71,6 +71,7 @@ beforeEach(async () => {
   await Blog.insertMany(initBlogs)
 })
 
+//4.8: Blog List Tests, step 1
 test('blogs are returned as json', async () => {
   await api
     .get('/api/blogs')
@@ -83,6 +84,7 @@ test('there are 6 blogs', async () => {
   assert.strictEqual(response.body.length, initBlogs.length)
 })
 
+//4.9: Blog List Tests, step 2
 test('the unique identifier property of the blog posts is named id, instead of _id', async () => {
   const response = await api.get('/api/blogs')
   const blogs = response.body
@@ -93,9 +95,54 @@ test('the unique identifier property of the blog posts is named id, instead of _
   })
 })
 
+//4.10: Blog List Tests, step 3
+const newBlog = {
+  "title": "Blog 2",
+  "author": "FJ",
+  "url": "http://example2.com",
+  "likes": 55
+}
+
+test('a valid blog can be added', async () => {
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+})
+
+test('if the number of blogs increased by 1', async () => {
+  const responseBefore = await api.get('/api/blogs')
+  const numberBefore= responseBefore.body.length
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+  const responseAfter = await api.get('/api/blogs')
+  const numberAfter= responseAfter.body.length
+
+assert.strictEqual(numberAfter, numberBefore + 1)
+})
+
+test('if the contents is correctly saved', async () => {
+  await api
+  .post('/api/blogs')
+  .send(newBlog)
+  const responseAfter = await api.get('/api/blogs')
+
+  const title = responseAfter.body.map(r => r.title)
+  const author = responseAfter.body.map(r => r.author)
+  const url = responseAfter.body.map(r => r.url)
+  const likes = responseAfter.body.map(r => r.likes)
+  assert.ok(title.includes(newBlog.title))
+  assert.ok(author.includes(newBlog.author))
+  assert.ok(url.includes(newBlog.url))
+  assert.ok(likes.includes(newBlog.likes))
+})
+
 
 after(async () => {
   await mongoose.connection.close()
 })
 
-
+//npm test -- tests/blog_api.test.js
