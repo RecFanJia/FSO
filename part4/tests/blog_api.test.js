@@ -139,7 +139,25 @@ test('if the contents is correctly saved', async () => {
   assert.ok(url.includes(newBlog.url))
   assert.ok(likes.includes(newBlog.likes))
 })
+//4.11*: Blog List Tests, step 4
 
+test('if the likes property is missing from the request, it defaults to 0', async () => {
+  const blogWithoutLikes = {
+    title: "Blog without likes",
+    author: "Author",
+    url: "http://example.com"
+  }
+
+  const response = await api
+    .post('/api/blogs')
+    .send(blogWithoutLikes)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  assert.strictEqual(response.body.likes, 0)
+})
+
+//4.12*: Blog List tests, step 5
 
 after(async () => {
   await mongoose.connection.close()
