@@ -10,20 +10,26 @@ blogsRouter.get('/', async (req, res) => {
 
 // 创建新博客
 blogsRouter.post('/', async (req, res, next) => {
+  const { title, url, author, likes } = req.body
+
+  if (!title || !url) {
+    return res.status(400).json({ error: 'title or url missing' })
+  }
+
   const blog = new Blog({
-    title: req.body.title,
-    author: req.body.author,
-    url: req.body.url,
-    likes: req.body.likes || 0
-  });
+    title,
+    author,
+    url,
+    likes: likes || 0
+  })
 
   try {
-    const savedBlog = await blog.save();
-    res.status(201).json(savedBlog);
+    const savedBlog = await blog.save()
+    res.status(201).json(savedBlog)
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
 // 删除博客
 blogsRouter.delete('/:id', async (req, res, next) => {

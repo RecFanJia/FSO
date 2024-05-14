@@ -158,6 +158,30 @@ test('if the likes property is missing from the request, it defaults to 0', asyn
 })
 
 //4.12*: Blog List tests, step 5
+test('if the title property is missing, return 400 Bad Request', async () => {
+  const blogWithoutTitle = {
+    author: "Author",
+    url: "http://example.com"
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutTitle)
+    .expect(400)
+})
+
+test('if the url property is missing, return 400 Bad Request', async () => {
+  const blogWithoutUrl = {
+    title: "Blog without URL",
+    author: "Author"
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutUrl)
+    .expect(400)
+})
+
 
 after(async () => {
   await mongoose.connection.close()
