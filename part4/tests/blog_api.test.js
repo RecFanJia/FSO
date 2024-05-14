@@ -1,3 +1,4 @@
+//npm test -- tests/blog_api.test.js
 require('dotenv').config()
 const { test, before, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
@@ -67,18 +68,7 @@ before(async () => {
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-  let blogObject = new Blog(initBlogs[0])
-  await blogObject.save()
-  blogObject = new Blog(initBlogs[1])
-  await blogObject.save()
-  blogObject = new Blog(initBlogs[2])
-  await blogObject.save()
-  blogObject = new Blog(initBlogs[3])
-  await blogObject.save()
-  blogObject = new Blog(initBlogs[4])
-  await blogObject.save()
-  blogObject = new Blog(initBlogs[5])
-  await blogObject.save()
+  await Blog.insertMany(initBlogs)
 })
 
 test('blogs are returned as json', async () => {
@@ -90,10 +80,22 @@ test('blogs are returned as json', async () => {
 
 test('there are 6 blogs', async () => {
   const response = await api.get('/api/blogs')
-
   assert.strictEqual(response.body.length, initBlogs.length)
 })
+
+test('the unique identifier property of the blog posts is named id, instead of _id', async () => {
+  const response = await api.get('/api/blogs')
+  const blogs = response.body
+
+  blogs.forEach(blog => {
+    assert.ok(blog.id)
+    assert.strictEqual(blog._id, undefined)
+  })
+})
+
 
 after(async () => {
   await mongoose.connection.close()
 })
+
+
