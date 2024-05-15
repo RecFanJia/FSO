@@ -1,3 +1,4 @@
+//Blogs
 GET http://localhost:3001/api/blogs
 Content-Type: application/json
 ###
@@ -18,6 +19,60 @@ Content-Type: application/json
   "likes": 55
 }
 ###
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Blog 2",
+  "author": "FJ",
+  "url": "http://example2.com",
+  "likes": 55
+}
+//blog with users
+###
+GET http://localhost:3001/api/users
+Content-Type: application/json
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "RecFanJia",
+  "name": "FanJia",
+  "password": "2301335",
+  "blogs":[
+      {
+      "_id": "5a422a851b54a676234d17f7",
+      "title": "React patterns",
+      "author": "Zdsger W. Dijkstra",
+      "url": "https://reactpatterns.com/",
+      "likes": 7,
+      "__v": 0
+      },
+      { 
+      "_id": "5a422aa71b54a676234d17f8",
+      "title": "Go To Statement Considered Harmful",
+      "author": "Zdsger W. Dijkstra",
+      "url": "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+      "likes": 5,
+      "__v": 0
+      }
+    ]
+}
+###
+PUT http://localhost:3001/api/users/RecFanJia
+Content-Type: application/json
+
+{
+  "name": "FanJia Updated",
+  "password": "newpassword123"
+}
+
+###
+
+DELETE http://localhost:3001/api/users/RecFanJia
+Content-Type: application/json
+
 //PUT http://localhost:3001/api/persons/663c8f5aae3a26be268a7559
 //Content-Type: application/json
 //
