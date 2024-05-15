@@ -18,18 +18,7 @@ blogsRouter.get('/', async (req, res, next) => {
 blogsRouter.post('/', async (request, response, next) => {
   const { url, title, author, likes } = request.body;
 
-  let decodedToken;
-  try {
-    decodedToken = jwt.verify(request.token, process.env.SECRET);
-  } catch (error) {
-    return next(error);
-  }
-
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' });
-  }
-
-  const user = await User.findById(decodedToken.id);
+  const user = request.user;
   if (!user) {
     return response.status(401).json({ error: 'invalid user' });
   }
@@ -59,36 +48,30 @@ blogsRouter.post('/', async (request, response, next) => {
 });
 
 // 删除博客
-blogsRouter.delete('/:id', async (req, res, next) => {
-  let decodedToken;
-  try {
-    decodedToken = jwt.verify(req.token, process.env.SECRET);
-  } catch (error) {
-    return res.status(401).json({ error: 'token invalid or expired' });
-  }
+blogsRouter.delete('/:id', async (request, response, next) => {
+  const user = request.user;
 
-  if (!decodedToken.id) {
-    return res.status(401).json({ error: 'token invalid' });
+  if (!user) {
+    return response.status(401).json({ error: 'invalid user' });
   }
 
   try {
-    const blog = await Blog.findById(req.params.id);
+    const blog = await Blog.findById(request.params.id);
 
     if (!blog) {
-      return res.status(404).json({ error: 'Blog not found' });
+      return response.status(404).json({ error: 'Blog not found' });
     }
 
-    if (blog.user.toString() !== decodedToken.id.toString()) {
-      return res.status(401).json({ error: 'Unauthorized' });
+    if (blog.user.toString() !== user._id.toString()) {
+      return response.status(401).json({ error: 'Unauthorized' });
     }
 
-    await Blog.findByIdAndDelete(req.params.id);
+    await Blog.findByIdAndDelete(request.params.id);
 
-    const user = await User.findById(decodedToken.id);
-    user.blogs = user.blogs.filter(blogId => blogId.toString() !== req.params.id);
+    user.blogs = user.blogs.filter(blogId => blogId.toString() !== request.params.id);
     await user.save();
 
-    res.status(204).end();
+    response.status(204).end();
   } catch (error) {
     next(error);
   }
