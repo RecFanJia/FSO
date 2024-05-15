@@ -22,6 +22,7 @@ Content-Type: application/json
 ###
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJlY0xpc2h1byIsImlkIjoiNjY0NGI5MTg3ZmRmNzQ5YzM1MmU1ZmNmIiwiaWF0IjoxNzE1Nzg4NTgxfQ.FXikfXxMQRf-PYLOoWz6E49EMfYgLR8okhsJ15J1O1U"
 
 {
   "title": "Blog 1",
@@ -30,42 +31,7 @@ Content-Type: application/json
   "likes": 5,
   "user": "6644b9187fdf749c352e5fcf"
 }
-//blog with users
-###
-GET http://localhost:3001/api/users
-Content-Type: application/json
-###
-POST http://localhost:3001/api/users
-Content-Type: application/json
 
-{
-  "username": "RecFanJia",
-  "name": "FanJia",
-  "password": "2301335"
-}
-
-###
-POST http://localhost:3001/api/users
-Content-Type: application/json
-
-{
-  "username": "RecLishuo",
-  "name": "Lishuo",
-  "password": "2301335"
-}
-###
-PUT http://localhost:3001/api/users/RecFanJia
-Content-Type: application/json
-
-{
-  "name": "FanJia Updated",
-  "password": "newpassword123"
-}
-
-###
-
-DELETE http://localhost:3001/api/users/RecFanJia
-Content-Type: application/json
 
 //PUT http://localhost:3001/api/persons/663c8f5aae3a26be268a7559
 //Content-Type: application/json

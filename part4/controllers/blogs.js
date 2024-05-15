@@ -2,28 +2,53 @@ const express = require('express');
 const Blog = require('../models/blog');
 const User = require('../models/user');
 const blogsRouter = express.Router();
+const jwt = require('jsonwebtoken')
+
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '')
+  }
+  return null
+}
 
 // 获取所有博客
-blogsRouter.get('/', async (req, res) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
-  res.json(blogs);
+blogsRouter.get('/', async (req, res, next) => {
+  try {
+    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
+    res.json(blogs);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // 创建新博客
-blogsRouter.post('/', async (req, res, next) => {
-  const { title, url, author, likes } = req.body;
+blogsRouter.post('/', async (request, response, next) => {
+  const { url, title, author, likes } = request.body;
 
-  if (!title || !url) {
-    return res.status(400).json({ error: 'title or url missing' });
+  const token = getTokenFrom(request);
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(token, process.env.SECRET);
+  } catch (error) {
+    return next(error);
+  }
+
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' });
+  }
+
+  const user = await User.findById(decodedToken.id);
+  if (!user) {
+    return response.status(401).json({ error: 'invalid user' });
+  }
+
+  // 验证输入数据
+  if (!url || !title || !author) {
+    return response.status(400).json({ error: 'url, title, and author are required' });
   }
 
   try {
-    // 找到第一个用户
-    const user = await User.findOne({});
-    if (!user) {
-      return res.status(400).json({ error: 'No users found in the database' });
-    }
-
     const blog = new Blog({
       url,
       title,
@@ -35,7 +60,8 @@ blogsRouter.post('/', async (req, res, next) => {
     const savedBlog = await blog.save();
     user.blogs = user.blogs.concat(savedBlog._id);
     await user.save();
-    res.status(201).json(savedBlog);
+
+    response.status(201).json(savedBlog);
   } catch (error) {
     next(error);
   }
