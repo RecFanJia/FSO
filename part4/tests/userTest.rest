@@ -31,6 +31,6 @@ Content-Type: application/json
 }
 
 ###
-
+//删除用户
 DELETE http://localhost:3001/api/users/RecFanJia
 Content-Type: application/json
