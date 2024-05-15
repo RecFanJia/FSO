@@ -4,14 +4,6 @@ const User = require('../models/user');
 const blogsRouter = express.Router();
 const jwt = require('jsonwebtoken')
 
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '')
-  }
-  return null
-}
-
 // 获取所有博客
 blogsRouter.get('/', async (req, res, next) => {
   try {
@@ -26,10 +18,9 @@ blogsRouter.get('/', async (req, res, next) => {
 blogsRouter.post('/', async (request, response, next) => {
   const { url, title, author, likes } = request.body;
 
-  const token = getTokenFrom(request);
   let decodedToken;
   try {
-    decodedToken = jwt.verify(token, process.env.SECRET);
+    decodedToken = jwt.verify(request.token, process.env.SECRET);
   } catch (error) {
     return next(error);
   }
