@@ -43,6 +43,7 @@ usersRouter.post('/', async (request, response, next) => {
     next(error)
   }
 })
+
 // PUT update user by username
 usersRouter.put('/:username', async (request, response, next) => {
     const { username } = request.params
