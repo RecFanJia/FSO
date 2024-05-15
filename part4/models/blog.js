@@ -16,6 +16,16 @@ blogSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
+
+    const orderedObject = {
+      url: returnedObject.url,
+      title: returnedObject.title,
+      author: returnedObject.author,
+      likes: returnedObject.likes,
+      user: returnedObject.user,
+      id: returnedObject.id
+    };
+    return orderedObject;
   }
 });
 
