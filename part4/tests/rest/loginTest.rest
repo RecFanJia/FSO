@@ -14,7 +14,7 @@ Content-Type: application/json
 # 创建一个新的博客
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJlY0ZhbkppYSIsImlkIjoiNjY0NGI0NDBhN2IyZmZiMWFkZDAwMGVjIiwiaWF0IjoxNzE1ODAwMDcyfQ.VF7FDCgmyYJh6j7htVwtA2fZaOlJ5u6PyYb0fQISJxo
 
 {
   "title": "Blog 1",
