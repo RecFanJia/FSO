@@ -1,8 +1,6 @@
 const express = require('express');
 const Blog = require('../models/blog');
-const User = require('../models/user');
 const blogsRouter = express.Router();
-const jwt = require('jsonwebtoken')
 
 // 获取所有博客
 blogsRouter.get('/', async (req, res, next) => {

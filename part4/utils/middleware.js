@@ -12,8 +12,8 @@ const requestLogger = (request, response, next) => {
 
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization');
-  if (authorization && authorization.startsWith('Bearer ')) {
-    request.token = authorization.replace('Bearer ', '');
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    request.token = authorization.substring(7);
   } else {
     request.token = null;
   }
@@ -21,15 +21,15 @@ const tokenExtractor = (request, response, next) => {
 };
 
 const userExtractor = async (request, response, next) => {
-  const token = request.token;
-  if (token) {
+  if (request.token) {
     try {
-      const decodedToken = jwt.verify(token, process.env.SECRET);
-      if (decodedToken.id) {
-        request.user = await User.findById(decodedToken.id);
+      const decodedToken = jwt.verify(request.token, process.env.SECRET);
+      if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token missing or invalid' });
       }
+      request.user = await User.findById(decodedToken.id);
     } catch (error) {
-      return response.status(401).json({ error: 'token invalid or expired' });
+      return response.status(401).json({ error: 'token invalid' });
     }
   } else {
     request.user = null;
