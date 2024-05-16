@@ -1,0 +1,29 @@
+//blog with users
+GET http://localhost:3001/api/blogs
+Content-Type: application/json
+####
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "RecFanJia",
+  "password": "2301335"
+}
+
+####
+# 创建一个新的博客
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer
+
+{
+  "title": "Blog 1",
+  "author": "John Doe",
+  "url": "http://example.com",
+  "likes": 10
+}
+
+####
+# 删除博客
+DELETE http://localhost:3001/api/blogs/66450897e548af1aff6f54cb
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJlY0ZhbkppYSIsImlkIjoiNjY0NGI0NDBhN2IyZmZiMWFkZDAwMGVjIiwiaWF0IjoxNzE1ODAwMDcyfQ.VF7FDCgmyYJh6j7htVwtA2fZaOlJ5u6PyYb0fQISJxo

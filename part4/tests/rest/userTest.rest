@@ -1,0 +1,36 @@
+//blog with users
+###
+GET http://localhost:3001/api/users
+Content-Type: application/json
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "RecFanJia",
+  "name": "FanJia",
+  "password": "2301335"
+}
+
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "RecLishuo",
+  "name": "Lishuo",
+  "password": "2301335"
+}
+###
+PUT http://localhost:3001/api/users/RecFanJia
+Content-Type: application/json
+
+{
+  "name": "FanJia Updated",
+  "password": "newpassword123"
+}
+
+###
+//删除用户
+DELETE http://localhost:3001/api/users/RecFanJia
+Content-Type: application/json
