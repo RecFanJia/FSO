@@ -15,6 +15,7 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+  const [formVisible, setFormVisible] = useState(false);
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs(blogs));
@@ -147,7 +148,8 @@ const App = () => {
           onChange={({ target }) => setNewUrl(target.value)}
         />
       </div>
-      <button type="submit">create</button>
+      <button type="submit">create</button><br/>
+      <button type="button" onClick={() => setFormVisible(false)}>cancel</button>
     </form>
   );
 
@@ -159,7 +161,8 @@ const App = () => {
         loginForm() :
         <div>
           <p>{user.name} logged-in <button onClick={handleLogout}>logout</button></p>
-          {blogForm()}
+          {!formVisible && <button onClick={() => setFormVisible(true)}>create new blog</button>}
+          {formVisible && blogForm()}
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
