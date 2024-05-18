@@ -45,6 +45,26 @@ blogsRouter.post('/', async (request, response, next) => {
   }
 });
 
+// 更新博客
+blogsRouter.put('/:id', async (request, response, next) => {
+  const { title, author, url, likes, user } = request.body;
+
+  const blog = {
+    title,
+    author,
+    url,
+    likes,
+    user
+  };
+
+  try {
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true });
+    response.json(updatedBlog);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // 删除博客
 blogsRouter.delete('/:id', async (request, response, next) => {
   const user = request.user;
