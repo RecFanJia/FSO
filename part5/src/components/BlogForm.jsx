@@ -7,12 +7,13 @@ const BlogForm = ({ createBlog }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    createBlog({
+    const blogObject = {
       title: newTitle,
       author: newAuthor,
       url: newUrl,
       likes: 0
-    });
+    };
+    createBlog(blogObject);
     setNewTitle('');
     setNewAuthor('');
     setNewUrl('');
