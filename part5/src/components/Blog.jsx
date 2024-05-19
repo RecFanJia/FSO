@@ -1,56 +1,57 @@
-import { useState } from 'react';
-import blogService from '../services/blogs';
+import { useState } from 'react'
+import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, updateBlog, removeBlog, currentUser }) => {
-  const [visible, setVisible] = useState(false);
-  const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [visible, setVisible] = useState(false)
+  const [confirmationMessage, setConfirmationMessage] = useState('')
 
   const toggleVisibility = () => {
-    setVisible(!visible);
-  };
+    setVisible(!visible)
+  }
 
   const handleLike = async () => {
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
       user: blog.user.id  // Ensure user field is an ID, not an object
-    };
+    }
 
     try {
-      const returnedBlog = await blogService.update(blog.id, updatedBlog);
+      const returnedBlog = await blogService.update(blog.id, updatedBlog)
 
       // Ensure the returned blog object retains the full user information
       const blogWithFullUser = {
         ...returnedBlog,
         user: blog.user  // Restore the original user object
-      };
+      }
 
-      updateBlog(blogWithFullUser);
+      updateBlog(blogWithFullUser)
     } catch (error) {
-      console.error('Error updating blog:', error);
+      console.error('Error updating blog:', error)
     }
-  };
+  }
 
   const handleDelete = async () => {
     if (!currentUser) {
-      alert('You need to log in to delete');
-      return;
+      alert('You need to log in to delete')
+      return
     }
 
     if (blog.user.username !== currentUser.username) {
-      alert('This blog is not added by the current logged-in user');
-      return;
+      alert('This blog is not added by the current logged-in user')
+      return
     }
 
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       try {
-        await blogService.remove(blog.id);
-        removeBlog(blog.id);
+        await blogService.remove(blog.id)
+        removeBlog(blog.id)
       } catch (error) {
-        console.error('Error deleting blog:', error);
+        console.error('Error deleting blog:', error)
       }
     }
-  };
+  }
 
   const blogStyle = {
     paddingTop: 10,
@@ -58,7 +59,7 @@ const Blog = ({ blog, updateBlog, removeBlog, currentUser }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
-  };
+  }
 
   return (
     <div style={blogStyle}>
@@ -76,7 +77,7 @@ const Blog = ({ blog, updateBlog, removeBlog, currentUser }) => {
             </a>
           </p>
           <p>
-            {blog.likes} likes 
+            {blog.likes} likes
             <button onClick={handleLike}>like</button>
           </p>
           <p>added by {blog.user.name}</p>
@@ -85,7 +86,27 @@ const Blog = ({ blog, updateBlog, removeBlog, currentUser }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+Blog.propTypes = {
+  blog: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    likes: PropTypes.number.isRequired,
+    user: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      username: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired
+    }).isRequired
+  }).isRequired,
+  updateBlog: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape({
+    username: PropTypes.string.isRequired
+  })
+}
+
+export default Blog
