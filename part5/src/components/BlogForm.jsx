@@ -21,11 +21,12 @@ const BlogForm = ({ createBlog, user, handleCancel }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} data-testid="blog-form">
       <h2>Create new blog</h2>
       <div>
-        title
+        <label htmlFor="title">title</label>
         <input
+          id="title"
           type="text"
           value={newTitle}
           name="Title"
@@ -33,8 +34,9 @@ const BlogForm = ({ createBlog, user, handleCancel }) => {
         />
       </div>
       <div>
-        author
+        <label htmlFor="author">author</label>
         <input
+          id="author"
           type="text"
           value={newAuthor}
           name="Author"
@@ -42,8 +44,9 @@ const BlogForm = ({ createBlog, user, handleCancel }) => {
         />
       </div>
       <div>
-        url
+        <label htmlFor="url">url</label>
         <input
+          id="url"
           type="text"
           value={newUrl}
           name="Url"

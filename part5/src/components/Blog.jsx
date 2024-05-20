@@ -4,28 +4,28 @@ import PropTypes from 'prop-types'
 
 const Blog = ({ blog, updateBlog, removeBlog, currentUser }) => {
   const [visible, setVisible] = useState(false)
-  const [confirmationMessage, setConfirmationMessage] = useState('')
 
   const toggleVisibility = () => {
     setVisible(!visible)
   }
 
   const handleLike = async () => {
+    console.log('handleLike called')
+
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
-      user: blog.user.id  // Ensure user field is an ID, not an object
+      user: blog.user.id
     }
 
     try {
       const returnedBlog = await blogService.update(blog.id, updatedBlog)
-
-      // Ensure the returned blog object retains the full user information
       const blogWithFullUser = {
         ...returnedBlog,
-        user: blog.user  // Restore the original user object
+        user: blog.user
       }
 
+      console.log('Blog updated successfully:', blogWithFullUser)
       updateBlog(blogWithFullUser)
     } catch (error) {
       console.error('Error updating blog:', error)
@@ -82,7 +82,6 @@ const Blog = ({ blog, updateBlog, removeBlog, currentUser }) => {
           </p>
           <p>added by {blog.user.name}</p>
           <button onClick={handleDelete}>delete</button>
-          {confirmationMessage && <p style={{ color: 'red' }}>{confirmationMessage}</p>}
         </div>
       )}
     </div>
