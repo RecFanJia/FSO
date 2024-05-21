@@ -22,7 +22,7 @@ const LoginForm = ({ handleLogin, setUsername, setPassword, username, password, 
           />
         </div>
         <button type="button" onClick={handleCancel} style={{ marginLeft: '10px' }}>cancel</button>
-        <button type="submit">login</button>
+        <button id="login-button" type="submit">login</button>
       </form>
     </div>
   )

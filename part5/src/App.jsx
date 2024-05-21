@@ -153,7 +153,7 @@ const App = () => {
           {formVisible ? (
             <BlogForm createBlog={createBlog} user={user} handleCancel={() => setFormVisible(false)} />
           ) : (
-            <button onClick={() => setFormVisible(true)}>create new blog</button>
+            <button  id="create_new_blog-button" onClick={() => setFormVisible(true)}>create new blog</button>
           )}
         </div>
       )}
