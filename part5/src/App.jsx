@@ -122,6 +122,9 @@ const App = () => {
     setBlogs(blogs.filter(blog => blog.id !== id))
   }
 
+  
+  const sortedBlogs = blogs.slice().sort((a, b) => b.likes - a.likes)
+
   return (
     <div>
       <h2>blogs</h2>
@@ -158,7 +161,7 @@ const App = () => {
         </div>
       )}
       <div>
-        {blogs.map(blog => (
+        {sortedBlogs.map(blog => (
           <Blog
             key={blog.id}
             blog={blog}

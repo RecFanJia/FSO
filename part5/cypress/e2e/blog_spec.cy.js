@@ -145,7 +145,7 @@ describe('Blog app', function() {
       cy.contains('FanJia Blog').should('not.exist')
     })
 
-    it('5.21b a blog cant be deleted by other users)', function() {
+    it('5.21b* a blog cant be deleted by other users)', function() {
       // Find the blog created by RecLishuo
       cy.contains('LiShuo Blog').parent().find('button').contains('view').click()
       
