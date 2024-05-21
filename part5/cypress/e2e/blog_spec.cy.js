@@ -28,7 +28,7 @@ describe('Blog app', function() {
           url: 'recfanjia.io',
           title: 'FanJia Blog',
           author: 'FanJia',
-          likes: 0
+          likes: 10
         },
         headers: {
           'Authorization': `Bearer ${body.token}`
@@ -48,7 +48,7 @@ describe('Blog app', function() {
           url: 'reclishuo.io',
           title: 'LiShuo Blog',
           author: 'LiShuo',
-          likes: 0
+          likes: 5
         },
         headers: {
           'Authorization': `Bearer ${body.token}`
@@ -154,6 +154,15 @@ describe('Blog app', function() {
       
       // Verify the blog is not deleted
       cy.contains('LiShuo Blog').should('be.visible')
+    })
+
+    it('5.22 blogs are sorted by likes', function() {
+      // Ensure the blogs are displayed
+      cy.get('.blog').should('have.length', 2)
+  
+      // Check if the blogs are sorted by likes
+      cy.get('.blog').eq(0).should('contain', 'FanJia Blog')
+      cy.get('.blog').eq(1).should('contain', 'LiShuo Blog')
     })
   })
 })
