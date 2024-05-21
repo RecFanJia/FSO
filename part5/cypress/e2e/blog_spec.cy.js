@@ -134,7 +134,7 @@ describe('Blog app', function() {
       cy.contains('1 likes').should('be.visible')
     })
 
-    it('5.21a a blog can be deleted by creator', function() {
+    it('5.21 a blog can be deleted by creator', function() {
       // Find the blog created by RecFanJia
       cy.contains('FanJia Blog').parent().find('button').contains('view').click()
       
@@ -145,7 +145,7 @@ describe('Blog app', function() {
       cy.contains('FanJia Blog').should('not.exist')
     })
 
-    it('5.21b* a blog cant be deleted by other users)', function() {
+    it('5.22 a blog cant be deleted by other users)', function() {
       // Find the blog created by RecLishuo
       cy.contains('LiShuo Blog').parent().find('button').contains('view').click()
       
@@ -156,7 +156,7 @@ describe('Blog app', function() {
       cy.contains('LiShuo Blog').should('be.visible')
     })
 
-    it('5.22 blogs are sorted by likes', function() {
+    it('5.23 blogs are sorted by likes', function() {
       // Ensure the blogs are displayed
       cy.get('.blog').should('have.length', 2)
   
