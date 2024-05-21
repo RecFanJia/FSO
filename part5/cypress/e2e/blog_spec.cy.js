@@ -1,99 +1,79 @@
-describe('blog app', function() {
-    beforeEach(function() {
-      cy.request('POST', 'http://localhost:3001/api/testing/reset')
+describe('Blog app', function() {
+  beforeEach(function() {
+    cy.request('POST', 'http://localhost:3001/api/testing/reset')
 
-      // Create a new user
-      const user = {
-        name: 'FanJia',
-        username: 'RecFanJia',
-        password: '2301335'
-      }
-      cy.request('POST', 'http://localhost:3001/api/users/', user)
+    // Create a new user
+    const user = {
+      name: 'FanJia',
+      username: 'RecFanJia',
+      password: '2301335'
+    }
+    cy.request('POST', 'http://localhost:3001/api/users/', user)
   
-      // Visit the application
-      cy.visit('http://localhost:5173')
-    })
-    it('Login form is shown', function() {
-      // Check if the login form is visible
-      cy.contains('login').click()
-      cy.get('input[name="Username"]').should('be.visible')
-      cy.get('input[name="Password"]').should('be.visible')
-      cy.get('#login-button').should('be.visible')
-    })
+    // Visit the application
+    cy.visit('http://localhost:5173')
+  })
 
-    describe('Login',function() {
-      it('succeeds with correct credentials', function() {
-        cy.contains('login').click()
-        cy.get('input[name="Username"]').type('RecFanJia')
-        cy.get('input[name="Password"]').type('2301335')
-        cy.get('#login-button').click()
-        // Verify correct login
-        cy.get('.notification')
+  it('5.17 Login form is shown', function() {
+    // Check if the login form is visible
+    cy.contains('login').click()
+    cy.get('input[name="Username"]').should('be.visible')
+    cy.get('input[name="Password"]').should('be.visible')
+    cy.get('#login-button').should('be.visible')
+  })
+
+  describe('Login', function() {
+    it('5.18a succeeds with correct credentials', function() {
+      cy.contains('login').click()
+      cy.get('input[name="Username"]').type('RecFanJia')
+      cy.get('input[name="Password"]').type('2301335')
+      cy.get('#login-button').click()
+      // Verify correct login
+      cy.get('.notification')
         .should('be.visible')
         .and('contain', 'Welcome FanJia')
-        cy.contains('FanJia logged-in').should('be.visible')
+      cy.contains('FanJia logged-in').should('be.visible')
 
-        // Verify that the notification is green
-        cy.get('.notification')
+      // Verify that the notification is green
+      cy.get('.notification')
         .should('have.css', 'color', 'rgb(0, 128, 0)')
-        
-      })
-  
-      it('fails with wrong credentials', function() {
-        cy.contains('login').click()
-        cy.get('input[name="Username"]').type('RecFanJia')
-        cy.get('input[name="Password"]').type('wrongnumber')
-        cy.get('#login-button').click()
-        // Verify failed login
-        cy.get('.error')
-          .should('be.visible')
-          .and('contain', 'Wrong username or password')
+    })
 
-        // Verify that the notification is red
-        cy.get('.error')
-          .should('have.css', 'color', 'rgb(255, 0, 0)')
-      })
+    it('5.18b fails with wrong credentials', function() {
+      cy.contains('login').click()
+      cy.get('input[name="Username"]').type('RecFanJia')
+      cy.get('input[name="Password"]').type('wrongnumber')
+      cy.get('#login-button').click()
+      // Verify failed login
+      cy.get('.error')
+        .should('be.visible')
+        .and('contain', 'Wrong username or password')
+
+      // Verify that the notification is red
+      cy.get('.error')
+        .should('have.css', 'color', 'rgb(255, 0, 0)')
     })
   })
-  //beforeEach(function() {
-  //  cy.request('POST', 'http://localhost:3001/api/testing/reset')
-  //  const user = {
-  //    name: 'FanJia',
-  //    username: 'RecFanJia',
-  //    password: '2301335'
-  //  }
-  //  cy.request('POST', 'http://localhost:3001/api/users/', user)
-  //  cy.visit('http://localhost:5173')
-  //})
-//
-//
-  //it('user can log in', function() {
-  //  cy.visit('http://localhost:5173')
-  //  cy.contains('login').click()
-  //  cy.get('input[name="Username"]').type('RecFanJia')
-  //  cy.get('input[name="Password"]').type('2301335')
-  //  cy.get('#login-button').click()
-//
-  //  cy.contains('FanJia logged-in')
-  //})
-//
-  //describe('when logged in', function() {
-  //  beforeEach(function() {
-  //    cy.visit('http://localhost:5173')
-  //    cy.contains('login').click()
-  //    cy.get('input[name="Username"]').type('RecFanJia')
-  //    cy.get('input[name="Password"]').type('2301335')
-  //    cy.get('#login-button').click()
-  //  })
-  //
-  //  it('a new blog can be created', function() {
-  //    cy.contains('create new blog').click()
-  //    cy.get('input[name="Title"]').type('TestBlog')
-  //    cy.get('input[name="Author"]').type('cypress')
-  //    cy.get('input[name="Url"]').type('cypress.io')
-  //    cy.contains('create').click()
-  //    cy.contains('A new blog "TestBlog" by cypress added')
-  //  })
-  //}) 
 
+  describe('When logged in', function() {
+    beforeEach(function() { 
+      cy.login({ username: 'RecFanJia', password: '2301335' })
+    })
 
+    it('5.19 a new blog can be created', function() {
+      // Ensure the "create new blog" button is visible and clickable
+      cy.contains('create new blog').should('be.visible').click()
+      
+      // Fill the form for creating a new blog
+      cy.get('input[name="Title"]').type('TestTitle')
+      cy.get('input[name="Author"]').type('TestAuthor')
+      cy.get('input[name="Url"]').type('TestUrl')
+      
+      // Submit the form
+      cy.contains('create').click()
+      
+      // Verify the blog is created
+      cy.contains('TestTitle').should('be.visible')
+    })
+  })
+})
