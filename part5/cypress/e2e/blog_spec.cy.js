@@ -2,14 +2,60 @@ describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3001/api/testing/reset')
 
-    // Create a new user
-    const user = {
+    // Create users
+    const user1 = {
       name: 'FanJia',
       username: 'RecFanJia',
       password: '2301335'
     }
-    cy.request('POST', 'http://localhost:3001/api/users/', user)
-  
+    const user2 = {
+      name: 'LiShuo',
+      username: 'RecLishuo',
+      password: '2301335'
+    }
+    cy.request('POST', 'http://localhost:3001/api/users/', user1)
+    cy.request('POST', 'http://localhost:3001/api/users/', user2)
+
+    // Login as RecFanJia and create a blog
+    cy.request('POST', 'http://localhost:3001/api/login', {
+      username: 'RecFanJia',
+      password: '2301335'
+    }).then(({ body }) => {
+      cy.request({
+        method: 'POST',
+        url: 'http://localhost:3001/api/blogs',
+        body: {
+          url: 'recfanjia.io',
+          title: 'FanJia Blog',
+          author: 'FanJia',
+          likes: 0
+        },
+        headers: {
+          'Authorization': `Bearer ${body.token}`
+        }
+      })
+    })
+
+    // Login as RecLishuo and create a blog
+    cy.request('POST', 'http://localhost:3001/api/login', {
+      username: 'RecLishuo',
+      password: '2301335'
+    }).then(({ body }) => {
+      cy.request({
+        method: 'POST',
+        url: 'http://localhost:3001/api/blogs',
+        body: {
+          url: 'reclishuo.io',
+          title: 'LiShuo Blog',
+          author: 'LiShuo',
+          likes: 0
+        },
+        headers: {
+          'Authorization': `Bearer ${body.token}`
+        }
+      })
+    })
+
     // Visit the application
     cy.visit('http://localhost:5173')
   })
@@ -74,6 +120,18 @@ describe('Blog app', function() {
       
       // Verify the blog is created
       cy.contains('TestTitle').should('be.visible')
+    })
+
+    it('5.20 a blog can be liked', function() {
+      // Find the blog created by RecLishuo
+      cy.contains('LiShuo Blog').parent().find('button').contains('view').click()
+      
+      // likes should be 0
+      cy.contains('0 likes').should('be.visible')
+      
+      // click like button, likes should be 1
+      cy.contains('like').click()
+      cy.contains('1 likes').should('be.visible')
     })
   })
 })
