@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import { createStore } from 'redux'
 import reducer from './reducer'
 
@@ -13,15 +12,35 @@ const App = () => {
     })
   }
 
+  const ok = () => {
+    store.dispatch({
+      type: 'OK'
+    })
+  }
+
+  const bad = () => {
+    store.dispatch({
+      type: 'BAD'
+    })
+  }
+
+  const reset = () => {
+    store.dispatch({
+      type: 'ZERO'
+    })
+  }
+
   return (
     <div>
-      <button onClick={good}>good</button> 
-      <button>ok</button> 
-      <button>bad</button>
-      <button>reset stats</button>
+      <h1>Give Feedback</h1>
+      <button onClick={good}>good</button>
+      <button onClick={ok}>ok</button>
+      <button onClick={bad}>bad</button>
+      <button onClick={reset}>reset stats</button>
+      <h2>Statistics</h2>
       <div>good {store.getState().good}</div>
-      <div>ok</div>
-      <div>bad</div>
+      <div>ok {store.getState().ok}</div>
+      <div>bad {store.getState().bad}</div>
     </div>
   )
 }
