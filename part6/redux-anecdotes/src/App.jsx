@@ -17,9 +17,11 @@ const App = () => {
     dispatch(addAnecdote(content))
   }
 
+  const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes)
+
   return (
     <div>
-      {anecdotes.map(anecdote => (
+      {sortedAnecdotes.map(anecdote => (
         <div key={anecdote.id}>
           <p>{anecdote.content}</p>
           <p>has {anecdote.votes} <button onClick={() => handleVote(anecdote.id)}>vote</button></p>
