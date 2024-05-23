@@ -4,20 +4,21 @@ const initialState = {
   bad: 0
 }
 
+const createActionsMap = (state) => {
+  const map = new Map()
+  Object.keys(state).forEach(key => {
+    map.set(key.toUpperCase(), (state) => ({ ...state, [key]: state[key] + 1 }))
+  })
+  map.set('ZERO', () => initialState)
+  return map
+}
+
+const actionsMap = createActionsMap(initialState)
+
 const counterReducer = (state = initialState, action) => {
   console.log(action)
-  switch (action.type) {
-    case 'GOOD':
-      return { ...state, good: state.good + 1 }
-    case 'OK':
-      return { ...state, ok: state.ok + 1 }
-    case 'BAD':
-      return { ...state, bad: state.bad + 1 }
-    case 'ZERO':
-      return initialState
-    default:
-      return state
-  }
+  const handler = actionsMap.get(action.type)
+  return handler ? handler(state) : state
 }
 
 export default counterReducer
