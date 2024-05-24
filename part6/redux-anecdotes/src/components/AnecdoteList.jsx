@@ -4,10 +4,9 @@ import { voteAnecdote } from '../reducers/anecdoteReducer'
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state.anecdote.anecdotes)
+  const anecdotes = useSelector(state => state.anecdotes)
   const filter = useSelector(state => state.filter.toLowerCase())
 
-  // 使用 useMemo 来缓存计算结果
   const filteredAndSortedAnecdotes = useMemo(() => {
     const filteredAnecdotes = anecdotes.filter(anecdote =>
       anecdote.content.toLowerCase().includes(filter)
