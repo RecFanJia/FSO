@@ -1,20 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import Notification from './components/Notification'
 import { useQuery } from '@tanstack/react-query'
 import { getAnecdotes } from './requests'
+import { NotificationProvider } from './components/NotificationContext'
 
 const App = () => {
-  const [notification, setNotification] = useState('')
-
   const result = useQuery({
     queryKey: ['anecdotes'],
     queryFn: getAnecdotes,
     retry: 3
   })
-
-  console.log(JSON.parse(JSON.stringify(result)))
 
   if (result.isLoading) {
     return <div>loading data...</div>
@@ -26,12 +23,14 @@ const App = () => {
   const anecdotes = Array.isArray(result.data) ? result.data : []
 
   return (
-    <div>
-      <h3>Anecdote app</h3>
-      <Notification message={notification} />
-      <AnecdoteForm setNotification={setNotification} />
-      <AnecdoteList anecdotes={anecdotes} />
-    </div>
+    <NotificationProvider>
+      <div>
+        <h3>Anecdote app</h3>
+        <Notification />
+        <AnecdoteForm />
+        <AnecdoteList anecdotes={anecdotes} />
+      </div>
+    </NotificationProvider>
   )
 }
 
